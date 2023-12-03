@@ -19,6 +19,7 @@ public class Main {
             for (int i = 0; i < 2; i++) {
                 try {
                     threads[i].join();
+                    System.out.println(MyThread.value);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -12,7 +12,6 @@ public class Main {
 		Thread[] threads = new Thread[2];
 		boolean sw = true;
 		for (int j = 0; j < N_ITERATIONS; j++) {
-			MyThread.value = 0;
 			for (int i = 0; i < 2; i++) {
 				threads[i] = new Thread(new MyThread());
 				threads[i].run();
