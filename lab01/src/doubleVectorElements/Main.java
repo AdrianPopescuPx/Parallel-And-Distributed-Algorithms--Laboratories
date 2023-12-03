@@ -10,10 +10,22 @@ public class Main {
         for (int i = 0; i < N; i++) {
             v[i] = i;
         }
-
+        Thread[] threads = new Thread[P];
         // Parallelize me using P threads
-        for (int i = 0; i < N; i++) {
-            v[i] = v[i] * 2;
+        int chunkSize = N / P;
+        for (int i = 0; i < P; i++) {
+            if (i == P-1) {
+                threads[i] = new Thread(new Worker(v, chunkSize * i, N));
+            }   else threads[i] = new Thread(new Worker(v, chunkSize * i, Math.min((i + 1) * chunkSize, N)));
+            threads[i].start();
+        }
+
+        for (int i = 0; i < P; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         for (int i = 0; i < N; i++) {

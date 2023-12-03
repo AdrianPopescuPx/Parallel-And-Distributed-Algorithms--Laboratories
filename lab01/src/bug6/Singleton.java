@@ -8,7 +8,7 @@ package bug6;
  */
 
 public class Singleton {
-    private static Singleton instance;
+    private static volatile Singleton instance;
     private static int numberOfInstances = 0;
 
     private Singleton() {
@@ -16,10 +16,12 @@ public class Singleton {
     }
 
     public static Singleton getInstance() {
-        if (instance == null) {
-            System.out.println("Creating only one instance");
-            instance = new Singleton();
-            ++numberOfInstances;
+        synchronized (Singleton.class) {
+            if (instance == null) {
+                System.out.println("Creating only one instance");
+                instance = new Singleton();
+                ++numberOfInstances;
+            }
         }
         return instance;
     }
