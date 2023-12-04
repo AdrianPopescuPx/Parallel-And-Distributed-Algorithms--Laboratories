@@ -1,26 +1,40 @@
 package barber;
 
+import java.util.concurrent.Semaphore;
+
 public class Barber extends Thread {
+
+    private Semaphore barberSemaphore;
+
+    public Barber(Semaphore sem) {
+        this.barberSemaphore = sem;
+    }
     @Override
     public void run() {
         int servedClients = 0;
 
         do {
-            // TODO
-
-            Main.chairs++;
-
-            // TODO
-
             try {
-                Thread.sleep(100);
+                // Așteaptă un client să ocupe o scaun
+                barberSemaphore.acquire();
+                Main.chairs--;
+                // Tunde clientul
+                System.out.println("Barber is cutting hair");
+                // Eliberează scaunul
+                Main.chairsSemaphore.release();
+                Main.chairs++;
+                System.out.println("Barber served client");
+                // Simulează o pauză între clienți
+                Thread.sleep(1000);
+                ++servedClients;
+                barberSemaphore.release();
+                if (servedClients == Main.TOTAL_CLIENTS) {
+                    System.out.println("Barber served all clients. Exiting.");
+                    break;
+                }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-
-            System.out.println("Barber served client");
-            ++servedClients;
-
         } while (checkIfThereAnyClients());
     }
 

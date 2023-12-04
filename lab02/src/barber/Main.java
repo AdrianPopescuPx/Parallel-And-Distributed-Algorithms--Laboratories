@@ -14,16 +14,19 @@ public class Main {
     public static int[] leftClients = new int[TOTAL_CLIENTS];
 
     // TODO: add semaphores
+    public static Semaphore chairsSemaphore = new Semaphore(TOTAL_CHAIRS);
+    public static Semaphore barberSemaphore = new Semaphore(1); // Un singur client poate intra la coafor în același timp
+
 
     public static int clients = TOTAL_CLIENTS;
     public static int chairs = TOTAL_CHAIRS;
 
     public static void main(String[] args) throws InterruptedException {
-        Thread barberThread = new Barber();
+        Thread barberThread = new Barber(barberSemaphore);
         Thread[] clientThreads = new Client[clients];
 
         for (int i = 0; i < clients; i++) {
-            clientThreads[i] = new Client(i);
+            clientThreads[i] = new Client(i, chairsSemaphore);
         }
 
         barberThread.start();
