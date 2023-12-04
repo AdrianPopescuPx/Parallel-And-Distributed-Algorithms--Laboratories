@@ -10,6 +10,11 @@ int *arr;
 int array_size;
 int num_threads;
 
+void *threadJob(int *arg) {
+
+  return NULL;
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     fprintf(stderr, "Specificati dimensiunea array-ului si numarul de thread-uri\n");
@@ -19,7 +24,7 @@ int main(int argc, char *argv[]) {
   array_size = atoi(argv[1]);
   num_threads = atoi(argv[2]);
 
-  arr = malloc(array_size * sizeof(int));
+  arr = (int *)malloc(array_size * sizeof(int));
   for (int i = 0; i < array_size; i++) {
     arr[i] = i;
   }
@@ -34,6 +39,12 @@ int main(int argc, char *argv[]) {
   }
 
   // TODO: aceasta operatie va fi paralelizata cu num_threads fire de executie
+  pthread_t threads[num_threads];
+  int chunkSize = array_size / num_threads; 
+  for (int i = 0; i < num_threads; i++) {
+    int start = i * chunkSize;
+    
+  }
   for (int i = 0; i < array_size; i++) {
     arr[i] += 100;
   }
@@ -46,6 +57,6 @@ int main(int argc, char *argv[]) {
       printf("\n");
     }
   }
-
+  free(arr);
   return 0;
 }
